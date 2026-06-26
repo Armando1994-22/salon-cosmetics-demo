@@ -3,13 +3,47 @@ import { supabase } from './supabaseClient'; // Verify your Supabase client conf
 import { Sparkles, DollarSign, Clock, Calendar } from 'lucide-react';
 import LogoImg from './assets/logo.png';
 
-export default function VanillaPermanenteCosmetics() {
+  // function to generate 15 time slots
+  const generateTimeSlots = () => {
+  const slots = [];
+  const startHour = 9;
+  const endHour = 18;
+
+  for (let hour = startHour; hour < endHour; hour++) {
+    for (let minute = 0; minute < 60; minute += 15) {
+      const displayHour = hour % 12 || 12;
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const displayMinute = minute === 0 ? '00' : minute;
+      
+      const label = `${displayHour}:${displayMinute} ${ampm}`;
+      const value = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
+      
+      slots.push({ label, value });
+    }
+  }
+  return slots;
+};
+
+const getTodayDateString = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+export default function App() {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState('');
   const [appointmentTime, setAppointmentTime] = useState('');
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
+  const timeSlot = generateTimeSlots();
+  
   // Fetch salon services from Supabase when page loads
   useEffect(() => {
     async function fetchServices() {
@@ -28,31 +62,51 @@ export default function VanillaPermanenteCosmetics() {
     fetchServices();
   }, []);
 
+  // Auto Connecting the seperate date and time 15 slots for the supabase table
+
+  useEffect(() => {
+    if (selectedDate && selectedTimeSlot) {
+      setAppointmentTime(`${selectedDate}T${selectedTimeSlot}`);
+    } else {
+      setAppointmentTime('');
+    }
+  }, [selectedDate, selectedTimeSlot]);
+
   // Handle form submission to create a booking
   const handleBooking = async (e) => {
     e.preventDefault();
     setMessage('');
 
-    if (!selectedService || !appointmentTime) {
-      setMessage('Please select a service and a date/time.');
-      return;
-    }
+    if (!selectedService || !selectedDate || !selectedTimeSlot) {
+    setMessage('Please select a service, date, and time slot.');
+    return;
+  }
+  if (selectedDate < getTodayDateString()) {
+  setMessage('Cannot book an appointment in the past.');
+  return;
+}
+
+    const finalAppointmentTime = `${selectedDate}T${selectedTimeSlot}`;
 
     const { error } = await supabase
       .from('salon_bookings')
       .insert([
         { 
           service_id: selectedService, 
-          appointment_time: appointmentTime,
+          appointment_time: finalAppointmentTime,
           status: 'pending'
         }
       ]);
 
     if (error) {
       setMessage(`Booking failed: ${error.message}`);
+      setIsSuccess(false);
     } else {
-      setMessage('✨ Appointment reserved successfully! ✨');
+      setMessage('✨ Request received! We are checking our availability and will email you shortly to confirm your session. ✨');
+      setIsSuccess(true);
       setSelectedService('');
+      setSelectedDate('');
+      setSelectedTimeSlot('');
       setAppointmentTime('');
     }
   };
@@ -148,31 +202,48 @@ export default function VanillaPermanenteCosmetics() {
                 ))}
               </select>
             </div>
-
             <div>
-              <label className="block text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-1.5">
-                Date & Time
+              <label className='block text-[10px] font-bold text-stone-400 uppercase tracking-widest md-1.5'>
+                Appointment Date
               </label>
-              <input 
-                type="datetime-local" 
-                value={appointmentTime}
-                onChange={(e) => setAppointmentTime(e.target.value)}
-                className="w-full p-3 bg-luxuryBlack border border-stone-800 rounded-lg text-sm text-vanillaPetal focus:outline-none focus:border-roseAccent focus:ring-1 focus:ring-roseAccent transition-all"
-                style={{ colorScheme: 'dark' }} // Native input dark-mode helper
+              <input
+               type="date"
+               value={selectedDate}
+               min={getTodayDateString()}
+               onChange={(e) => setSelectedDate(e.target.value)}
+               className="w-full p-3 bg-luxuryBlack border border-stone-800 rounded-lg text-sm text-vanillaPetal focus:outline-none focus:border-roseAccent focus:ring-1 focus:ring-roseAccent transition-all"
+               style={{ colorScheme: 'dark' }}
               />
+            </div>
+            <div>
+              <label className='block text-[10px] font-bold text-stone-400 uppercase tracking-widest md-1.5'>
+                Available Time (15-Min Slots)
+              </label>
+              <select
+                value={selectedTimeSlot}
+                onChange={(e) => setSelectedTimeSlot(e.target.value)}
+                className='w-full p-3 bg-luxuryBlack border border-stone-800 rounded-lg text-sm text-vanillaPetal focus:outline-none focus:border-roseAccent focus:ring-1 focus:ring-roseAccent transition-all'
+              >
+                <option value='' className='bg-cardCharcoal'>-- Choose an appointment time --</option>
+                  {timeSlot.map((slot) => (
+                    <option key={slot.value} value={slot.value} className='bg-cardCharcoal'>
+                      {slot.label}
+                    </option>
+                  ))}
+              </select>
             </div>
 
             <button 
               type="submit"
               className="w-full bg-roseAccent hover:bg-roseAccent/90 text-luxuryBlack font-bold py-3 px-4 rounded-lg transition-all text-sm tracking-widest uppercase shadow-md mt-2"
             >
-              Confirm Reservation
+              Request Appointment Slot
             </button>
           </form>
 
           {message && (
             <div className={`mt-4 p-3 rounded-lg text-xs text-center font-semibold border ${
-              message.includes('successfully') 
+              isSuccess  
                 ? 'bg-emerald-950/40 text-emerald-400 border-emerald-900/50' 
                 : 'bg-rose-950/40 text-rose-400 border-rose-900/50'
             }`}>
