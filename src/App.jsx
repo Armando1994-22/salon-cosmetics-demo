@@ -32,6 +32,51 @@ const getTodayDateString = () => {
   return `${year}-${month}-${day}`;
 };
 
+function ServiceCard({ service }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const description = service.description || "Premium tailor-made aesthetic formulation treatment.";
+  
+  // Decides whether to show the "See More" link based on text length
+  const isLongDescription = description.length > 90;
+
+  return (
+    <div className="bg-cardCharcoal p-6 rounded-xl border border-stone-800 shadow-md flex flex-col justify-between hover:border-roseAccent/40 hover:shadow-lg transition-all duration-300 group">
+      <div>
+        <h3 className="font-bold text-vanillaPetal text-lg group-hover:text-roseAccent transition-colors">
+          {service.name}
+        </h3>
+        
+        {/* Dynamic height block with your theme colors */}
+        <p className={`text-stone-400 text-sm mt-2 leading-relaxed transition-all duration-300 ${
+          !isExpanded && isLongDescription ? 'line-clamp-2' : ''
+        }`}>
+          {description}
+        </p>
+
+        {/* See More / See Less trigger button */}
+        {isLongDescription && (
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-xs font-bold text-roseAccent/80 hover:text-roseAccent mt-1 underline underline-offset-4 tracking-wide cursor-pointer transition-colors"
+          >
+            {isExpanded ? 'See Less' : 'See More'}
+          </button>
+        )}
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-stone-800/60 flex justify-between items-center text-sm">
+        <span className="flex items-center gap-0.5 font-bold text-roseAccent text-base">
+          <DollarSign size={16} />{service.price}
+        </span>
+        <span className="flex items-center gap-1 text-stone-500">
+          <Clock size={15} />{service.duration_minutes || '60'} mins
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState('');
@@ -110,6 +155,7 @@ export default function App() {
       setAppointmentTime('');
     }
   };
+  
 
   return (
     // 🎨 Using your exact custom colors: luxuryBlack, vanillaPetal, roseAccent, cardCharcoal
@@ -152,28 +198,7 @@ export default function App() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {services.map((service) => (
-                <div 
-                  key={service.id} 
-                  className="bg-cardCharcoal p-6 rounded-xl border border-stone-800 shadow-md flex flex-col justify-between hover:border-roseAccent/40 hover:shadow-lg transition-all duration-300 group"
-                >
-                  <div>
-                    <h3 className="font-bold text-vanillaPetal text-lg group-hover:text-roseAccent transition-colors">
-                      {service.name}
-                    </h3>
-                    <p className="text-stone-400 text-sm mt-2 line-clamp-2 leading-relaxed">
-                      {service.description || "Premium tailor-made aesthetic formulation treatment."}
-                    </p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-stone-800/60 flex justify-between items-center text-sm">
-                    <span className="flex items-center gap-0.5 font-bold text-roseAccent text-base">
-                      <DollarSign size={16} />{service.price}
-                    </span>
-                    <span className="flex items-center gap-1 text-stone-500">
-                      <Clock size={15} />{service.duration_minutes || '60'} mins
-                    </span>
-                  </div>
-                </div>
-              ))}
+                <ServiceCard key={service.id} service={service} />))}
             </div>
           )}
         </div>
