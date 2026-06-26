@@ -113,7 +113,7 @@ export default function App() {
 
   return (
     // 🎨 Using your exact custom colors: luxuryBlack, vanillaPetal, roseAccent, cardCharcoal
-    <div className="min-h-screen bg-luxuryBlack font-sans text-stone-300">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-luxuryBlack font-sans text-stone-300">
       <header className="bg-cardCharcoal border-b border-stone-800 py-10 text-center shadow-md">
       <div className="mb-4 relative group">
           <div className="absolute  -inset-0.5 bg-roseAccent rounded-full opacity-30 group-hover:opacity-60 transition duration-300 blur-xs"></div>
@@ -125,9 +125,9 @@ export default function App() {
         </div>
       {/* 🖤 Premium Logo-Matched Dark Header */}
       
-        <h1 className="text-4xl font-serif text-vanillaPetal tracking-wide flex justify-center items-center gap-2 font-bold">
-          <Sparkles className="text-roseAccent animate-pulse" size={24} /> 
-          Vanilla <span className="text-roseAccent font-normal italic">Permanente</span> Cosmetics
+        <h1 className="text-2xl sm:text-4xl font-serif text-vanillaPetal tracking-wide flex flex-wrap justify-center items-center gap-2 font-bold px-4">
+          <Sparkles className="text-roseAccent animate-pulse shrink-0" size={24} /> 
+            <span>Vanilla <span className="text-roseAccent font-normal italic">Permanente</span> Cosmetics</span>
         </h1>
         <p className="text-stone-500 font-medium text-xs tracking-widest uppercase mt-2">
           PERMANENT COSMETIC • CLINICAL ESTHETICS
