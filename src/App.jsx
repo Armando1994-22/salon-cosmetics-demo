@@ -217,7 +217,7 @@ export default function App() {
             </div>
             <div>
               <label className='block text-[10px] font-bold text-stone-400 uppercase tracking-widest md-1.5'>
-                Available Time (15-Min Slots)
+                Available Time
               </label>
               <select
                 value={selectedTimeSlot}
