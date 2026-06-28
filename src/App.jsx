@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient'; // Verify your Supabase client configuration path
 import { Sparkles, DollarSign, Clock, Calendar } from 'lucide-react';
 import LogoImg from './assets/logo.png';
+import AboutSection from './AboutSection';
+import ReviewSection from './Reviews';
+import ContactSection from './Contacts';
 
   // function to generate 15 time slots
   const generateTimeSlots = () => {
@@ -173,7 +176,7 @@ export default function App() {
       
         <h1 className="text-2xl sm:text-4xl font-serif text-vanillaPetal tracking-wide flex flex-wrap justify-center items-center gap-2 font-bold px-4">
           <Sparkles className="text-roseAccent animate-pulse shrink-0" size={24} /> 
-            <span>Vanilla <span className="text-roseAccent font-normal italic">Permanente</span> Cosmetics</span>
+            <span>Vanilla <span className="text-roseAccent font-normal italic">Permanent</span> Cosmetic</span>
         </h1>
         <p className="text-stone-500 font-medium text-xs tracking-widest uppercase mt-2">
           PERMANENT COSMETIC • CLINICAL ESTHETICS
@@ -276,8 +279,10 @@ export default function App() {
             </div>
           )}
         </div>
-
       </main>
+          <AboutSection/>
+          <ReviewSection/>
+          <ContactSection/>
     </div>
   );
 }
