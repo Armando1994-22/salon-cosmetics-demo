@@ -35,7 +35,7 @@ const getTodayDateString = () => {
   return `${year}-${month}-${day}`;
 };
 
-function ServiceCard({ service }) {
+function ServiceCard({ service, onSelect }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const description = service.description || "Premium tailor-made aesthetic formulation treatment.";
   
@@ -76,6 +76,12 @@ function ServiceCard({ service }) {
           <Clock size={15} />{service.duration_minutes || '60'} mins
         </span>
       </div>
+      <button 
+      type="button"
+      onClick={onSelect}
+      className="bg-stone-800/80 hover:bg-roseAccent hover:text-luxuryBlack text-vanillaPatel font-bold py-1.5 px-3 rounded-lg text-xs tracking-wide transition-all duration-300 cursor-pointer border border-stone700/50 hover:border-roseAccent">
+        Book Now
+      </button>
     </div>
   );
 }
@@ -89,6 +95,7 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const timeSlot = generateTimeSlots();
   
@@ -124,6 +131,9 @@ export default function App() {
   const handleBooking = async (e) => {
     e.preventDefault();
     setMessage('');
+    setIsSuccess(false); 
+    
+    if (isSubmitting) return;
 
     if (!selectedService || !selectedDate || !selectedTimeSlot) {
     setMessage('Please select a service, date, and time slot.');
@@ -133,6 +143,8 @@ export default function App() {
   setMessage('Cannot book an appointment in the past.');
   return;
 }
+
+    setIsSubmitting(true);
 
     const finalAppointmentTime = `${selectedDate}T${selectedTimeSlot}`;
 
@@ -146,6 +158,8 @@ export default function App() {
         }
       ]);
 
+      setIsSubmitting(false);
+
     if (error) {
       setMessage(`Booking failed: ${error.message}`);
       setIsSuccess(false);
@@ -158,6 +172,14 @@ export default function App() {
       setAppointmentTime('');
     }
   };
+
+    const handleSelectedService = (serviceId) => {
+      setSelectedService(serviceId);
+      const bookingFormElement = document.getElementById('booking-section');
+      if (bookingFormElement){
+        bookingFormElement.scrollIntoView({behavior: 'smooth', block: 'start'})
+      }
+    };
   
 
   return (
@@ -201,13 +223,13 @@ export default function App() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {services.map((service) => (
-                <ServiceCard key={service.id} service={service} />))}
+                <ServiceCard key={service.id} service={service} onSelect={() => handleSelectedService(service.id)}/>))}
             </div>
           )}
         </div>
 
         {/* 📅 Booking Card */}
-        <div className="bg-cardCharcoal p-6 rounded-2xl border border-stone-800 shadow-xl h-fit">
+        <div id="booking-section" className="bg-cardCharcoal p-6 rounded-2xl border border-stone-800 shadow-xl h-fit scroll-mt-6">
           <h2 className="text-xl font-bold font-serif text-vanillaPetal mb-4 flex items-center gap-2 border-b pb-3 border-stone-800 tracking-wider uppercase text-sm">
             <Calendar size={18} className="text-roseAccent" /> Secure a Session
           </h2>
@@ -262,10 +284,15 @@ export default function App() {
             </div>
 
             <button 
-              type="submit"
-              className="w-full bg-roseAccent hover:bg-roseAccent/90 text-luxuryBlack font-bold py-3 px-4 rounded-lg transition-all text-sm tracking-widest uppercase shadow-md mt-2"
+              type="submit" 
+              disabled={isSubmitting} // 👈 Disables the button completely while loading
+              className={`w-full font-bold py-3 px-4 rounded-xl transition duration-300 shadow-md text-sm mt-2 tracking-wide text-luxuryBlack ${
+              isSubmitting 
+                ? 'bg-roseAccent/50 cursor-not-allowed opacity-70' // UI changes when busy
+                : 'bg-roseAccent hover:bg-roseAccent/90 cursor-pointer'
+             }`}
             >
-              Request Appointment Slot
+              {isSubmitting ? 'Processing request...' : 'Request Booking'} 
             </button>
           </form>
 
