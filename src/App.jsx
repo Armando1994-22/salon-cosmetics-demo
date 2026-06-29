@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient'; // Verify your Supabase client configuration path
 import { Sparkles, DollarSign, Clock, Calendar } from 'lucide-react';
 import LogoImg from './assets/logo.png';
-import AboutSection from './AboutSection';
-import ReviewSection from './Reviews';
-import ContactSection from './Contacts';
+import AboutSection from './components/AboutSection';
+import ReviewSection from './components/Reviews';
+import ContactSection from './components/Contacts';
 
   // function to generate 15 time slots
   const generateTimeSlots = () => {
