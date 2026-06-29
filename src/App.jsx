@@ -189,7 +189,7 @@ export default function App() {
       <div className="mb-4 relative group">
           <div className="absolute  -inset-0.5 bg-roseAccent rounded-full opacity-30 group-hover:opacity-60 transition duration-300 blur-xs"></div>
           <img 
-            src={LogoImg} 
+            src={LogoImg}
             alt="Vanilla Permanente Cosmetics Logo" 
             className="relative w-32 h-32 rounded-full object-cover shadow-lg border border-stone-800"
           />
