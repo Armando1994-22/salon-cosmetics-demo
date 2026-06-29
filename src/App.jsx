@@ -198,7 +198,7 @@ export default function App() {
       
         <h1 className="text-2xl sm:text-4xl font-serif text-vanillaPetal tracking-wide flex flex-wrap justify-center items-center gap-2 font-bold px-4">
           <Sparkles className="text-roseAccent animate-pulse shrink-0" size={24} /> 
-            <span>Vanilla <span className="text-roseAccent font-normal italic">Permanent</span> Cosmetic</span>
+            <span>Your <span className="text-roseAccent font-normal italic">Company/Business Name</span> Will Go Here</span>
         </h1>
         <p className="text-stone-500 font-medium text-xs tracking-widest uppercase mt-2">
           PERMANENT COSMETIC • CLINICAL ESTHETICS

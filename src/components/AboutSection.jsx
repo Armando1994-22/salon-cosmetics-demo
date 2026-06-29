@@ -7,7 +7,7 @@ export default function () {
                     Meet the Artisan Behind the Needle
                 </h2>
                 <p className="text-stone-400 text-sm leading-relaxed mb-4">
-                    Hi, I'm the founder of Vanilla Permanente Cosmetics. With years of clinical training in permanent cosmetics and skin science, I treat permanent makeup as an art form tailored completely to your facial structure.
+                    Hi, I'm the founder of (Business Name). With years of clinical training in permanent cosmetics and skin science, I treat permanent makeup as an art form tailored completely to your facial structure.
                 </p>
                 <p className="text-stone-400 text-sm leading-relaxed">
                     Our clinic specializes in ultra-realistic hyper-pigmentation procedures, custom brow mapping, and clinical esthetics designed to enhance your natural beauty while saving you valuable morning routines.
