@@ -5,6 +5,7 @@ import LogoImg from './assets/logo.png';
 import AboutSection from './components/AboutSection';
 import ReviewSection from './components/Reviews';
 import ContactSection from './components/Contacts';
+import CookieBanner from './components/CookieBanner';
 
   // function to generate 15 time slots
   const generateTimeSlots = () => {
@@ -185,6 +186,9 @@ export default function App() {
   return (
     // 🎨 Using your exact custom colors: luxuryBlack, vanillaPetal, roseAccent, cardCharcoal
     <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-luxuryBlack font-sans text-stone-300">
+      <div className="bg-rose-950/40 border-b border-rose-900/60 text-center py-2 px-4 text-[11px] sm:text-xs text-rose-300 tracking-wide font-medium">
+      🚀 <span className="font-bold text-rose-200">Developer Demo Mode:</span> This is a non-commercial portfolio project. No real appointments are booked, and no financial data is processed.
+      </div>
       <header className="bg-cardCharcoal border-b border-stone-800 py-10 text-center shadow-md">
       <div className="mb-4 relative group">
           <div className="absolute  -inset-0.5 bg-roseAccent rounded-full opacity-30 group-hover:opacity-60 transition duration-300 blur-xs"></div>
@@ -310,6 +314,7 @@ export default function App() {
           <AboutSection/>
           <ReviewSection/>
           <ContactSection/>
+          <CookieBanner/>
     </div>
   );
 }
